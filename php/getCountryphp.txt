@@ -1,0 +1,37 @@
+
+
+
+
+sets up the php to display errors
+sets up the php to report all errors
+
+creates a variable executionStartTime and stores the current time as a float in Unix Timestamp
+
+fetches the contents of "countryBorders.geo.json" and stores init in the variable results.
+
+creates a function compare, with 2 parameters.
+
+compares a[name] to b[name] and if they are equal, returns 0.
+
+if index of a[name] is alphbecitally? less than b[name] subtract return -1(move it back one index?) else return 1(move it forwards one index?).
+
+
+decodes the result varable (which is the contents of the JSON file "countryBorders.geo.json) in php and stores it as the varible decode.
+
+creates a varible countries and assigns it an empty array.
+
+Loops through the features value of the php version of the features array (from "countryBorders.geo.json file) 
+Pushes each of the "properties" object onto the countries array.
+
+
+Sorts the contries array occuring to the compare function.
+
+creates the variable output and sets the out's status code to 200.
+
+sets outputs status name to ok.
+sets outputs statuts description to success.
+sets output's status returnedIn to the intger valaue of the differnce between executionStartTime and the time now in ms.
+
+sets up the raw http header to "Content-Type: application/json; charset=UTF-8". What does a raw hhtp header do?
+
+prints the output varibala to the console.
