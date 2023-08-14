@@ -22,14 +22,74 @@ var streets = L.tileLayer(
     layers: [streets]
   }).setView([54.5, -4], 6);
   
-  var layerControl = L.control.layers(basemaps).addTo(map);
+var layerControl = L.control.layers(basemaps).addTo(map);
   
-  /*L.easyButton("fa-info", function (btn, map) {
+/*L.easyButton("fa-info", function (btn, map) {
     $("#exampleModal").modal("show");
   }).addTo(map);*/
 
+/*var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
+
+var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+
+// zoom the map to the polygon
+map.fitBounds(polygon.getBounds());*/
+
+  //event handlers and ajax calls
   
- /*$('#country').empty();
- $.each(countries, function(i, p) {
-     $('#country').append($('<a class="dropdown-item" href="#"></a><br>').val(p).html(p));
- });*/
+  $(document).ready(function() {
+
+    $.ajax({
+        url: "php/getCountry.php",
+        type: 'GET',
+        dataType: 'json',
+
+        success: function(result) {
+            console.log(JSON.stringify(result));
+
+            if (result.status.name == "ok") {
+                for (const iterator of result.data) {
+                    $('#selectCountry').append(`<option value="${iterator.iso_a2}">${iterator.name}</option>`)
+                } 
+            }     
+        },
+
+        error: function(jqXHR, textStatus, errorThrown) {
+            // your error code
+            console.log(jqXHR);
+        }
+    });
+});
+
+$('option').on(click, function() {
+
+  $.ajax({
+      url: "php/getBorders.php",
+      type: 'GET',
+      dataType: 'json',
+
+      success: function(result) {
+          console.log(JSON.stringify(result));
+
+          if (result.status.name == "ok") {
+              for (const iterator of result.data) {
+                if (iterator.properties.iso_a2 == value) {
+                  var latlngs = iterator.geometry.coordinates;
+
+                var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+                
+                // zoom the map to the polygon
+                map.fitBounds(polygon.getBounds());
+                }
+                else iterator++                
+                
+              } 
+          }     
+      },
+
+      error: function(jqXHR, textStatus, errorThrown) {
+          // your error code
+          console.log(jqXHR);
+      }
+  });
+});

@@ -14,10 +14,13 @@
     
 </head>
 <body>
-  <div id="selectContainer">
-    <select id="selectCountry">
+
+  <span id="selectContainer">
+    <select id="selectCountry" class="shadow-lg p-3 mb-5 bg-body rounded">
+      <!-- populate from PHP call that returns only the codes and names from the countryborder GeoJSON file -->
     </select>
-  </div>
+  </span>
+
 <div id="map"></div>
 
 <div id="exampleModal" class="modal" data-bs-backdrop="false" tabindex="-1">
@@ -379,8 +382,6 @@
   <script src="js/scripts.js"></script>
 
   <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
-
-  <script src="js/getCountry.js"></script>
 
 </body>
 

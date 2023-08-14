@@ -7,13 +7,13 @@ sets up the php to report all errors
 
 creates a variable executionStartTime and stores the current time as a float in Unix Timestamp
 
-fetches the contents of "countryBorders.geo.json" and stores init in the variable results.
+fetches the contents of "countryBorders.geo.json" and stores it in the variable results.
 
 creates a function compare, with 2 parameters.
 
 compares a[name] to b[name] and if they are equal, returns 0.
 
-if index of a[name] is alphbecitally? less than b[name] subtract return -1(move it back one index?) else return 1(move it forwards one index?).
+if index of a[name] is alphbecitally less than b[name] subtract return -1 else return 1.
 
 
 decodes the result varable (which is the contents of the JSON file "countryBorders.geo.json) in php and stores it as the varible decode.
@@ -32,6 +32,6 @@ sets outputs status name to ok.
 sets outputs statuts description to success.
 sets output's status returnedIn to the intger valaue of the differnce between executionStartTime and the time now in ms.
 
-sets up the raw http header to "Content-Type: application/json; charset=UTF-8". What does a raw hhtp header do?
+sets up the raw http header to "Content-Type: application/json; charset=UTF-8". What does a raw http header do?
 
-prints the output varibala to the console.
+when recieves a requests will output the output (can be seen in js line 9). 
