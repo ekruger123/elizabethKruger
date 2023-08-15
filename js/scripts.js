@@ -24,16 +24,9 @@ var streets = L.tileLayer(
   
 var layerControl = L.control.layers(basemaps).addTo(map);
   
-/*L.easyButton("fa-info", function (btn, map) {
+L.easyButton("fa-info", function (btn, map) {
     $("#exampleModal").modal("show");
-  }).addTo(map);*/
-
-/*var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
-
-var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
-
-// zoom the map to the polygon
-map.fitBounds(polygon.getBounds());*/
+  }).addTo(map);
 
   //event handlers and ajax calls
   
@@ -61,31 +54,54 @@ map.fitBounds(polygon.getBounds());*/
     });
 });
 
-$('option').on(click, function() {
+$('select').change(function() {
 
   $.ajax({
       url: "php/getBorders.php",
       type: 'GET',
+      data:{iso:$('select').val()},
       dataType: 'json',
 
       success: function(result) {
           console.log(JSON.stringify(result));
 
           if (result.status.name == "ok") {
-              for (const iterator of result.data) {
-                if (iterator.properties.iso_a2 == value) {
-                  var latlngs = iterator.geometry.coordinates;
 
-                var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+                let border = L.geoJSON(result.data).addTo(map);
                 
                 // zoom the map to the polygon
-                map.fitBounds(polygon.getBounds());
-                }
-                else iterator++                
+                map.fitBounds(border.getBounds());
+                }     
                 
-              } 
-          }     
-      },
+              },
+
+      error: function(jqXHR, textStatus, errorThrown) {
+          // your error code
+          console.log(jqXHR);
+      }
+  });
+});
+
+$('select').change(function() {
+
+  $.ajax({
+      url: "php/getBasicInfo.php",
+      type: 'GET',
+      data:{country:$('select').html},
+      dataType: 'json',
+
+      success: function(result) {
+          console.log(JSON.stringify(result));
+
+          if (result.status.name == "ok") {
+
+            $('#continent').html(result.data.geonames.continentName);
+
+            $('#capitalCity').html(result.data.geonames.capital);
+            
+            $('#population').html(result.data.geonames.population);
+          }
+        },
 
       error: function(jqXHR, textStatus, errorThrown) {
           // your error code
