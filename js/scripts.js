@@ -111,7 +111,7 @@ $('select').change(function() {
       }
   });
 
-  /*$.ajax({
+  $.ajax({
     url: "php/getOpenCageData.php",
     type: 'GET',
     data:{country:$('select').html()},
@@ -130,7 +130,7 @@ $('select').change(function() {
         // your error code
         console.log(jqXHR);
     }
-});*/
+});
 
   $.ajax({
       url: "php/getBasicInfo.php",
@@ -142,18 +142,12 @@ $('select').change(function() {
           console.log(JSON.stringify(result));
 
           if (result.status.name == "ok") {
-            
-          let capitalLocal; 
-          capitalLocal = result.data[0].capital;
-          window.capitalGlobal = capitalLocal;
 
-          console.log(capitalLocal);
-          console.log(window.capitalGlobal);
 
       
             $('#continent').html(`<td>${result.data[0].continentName}</td>`);
 
-            $('#capitalCity').html(`<td>${capitalLocal}</td>`);
+            $('#capitalCity').html(`<td>${result.data[0].capital}</td>`);
             
             $('#population').html(`<td>${result.data[0].population}</td>`);
 
