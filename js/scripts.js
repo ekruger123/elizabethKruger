@@ -28,6 +28,13 @@ L.easyButton("fa-info", function (btn, map) {
     $("#exampleModal").modal("show");
   }).addTo(map);
 
+
+//marker
+
+/*L.marker([51.5, -0.09]).addTo(map)
+    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+    .openPopup();*/
+
   //onload button
 
   document.onreadystatechange = function() {
@@ -54,9 +61,53 @@ L.easyButton("fa-info", function (btn, map) {
 
             if (result.status.name == "ok") {
                 for (const iterator of result.data) {
-                    $('#selectCountry').append(`<option value="${iterator.iso_a2}">${iterator.name}</option>`)
+                    $('#selectCountry').append(`<option id="${iterator.iso_a2}" value="${iterator.iso_a2}">${iterator.name}</option>`)
+
+                }
+
+
+                    $.ajax({
+                      url: "php/getFlags.php",
+                      type: 'GET',
+                      dataType: 'json',
+              
+                      success: function(result) {
+                          console.log(JSON.stringify(result));
+              
+                          if (result.status.name == "ok") {
+
+                            let flagsData = result.data;
+
+                            let flagsArr = Object.entries(flagsData);
+
+                            /*$('#selectCountry').find('option').each(function(index,element){
+                              //console.log("Ellie",element.value);
+                                                 
+                              for ([key, val] of flagsArr){
+                                if (key == element.value) {
+                                  
+                                  $(`#${element.value}`).prepend(`<span><img src=${val.image} alt="${element.text} flag" height="32px" /></span>`);
+                                                     
+                                }
+                              }
+                              });*/                              
+              
+                          }     
+                      },
+              
+                      error: function(jqXHR, textStatus, errorThrown) {
+                          // your error code
+                          console.log(jqXHR);
+                      }
+                  });
+
+
+
+                    
                 } 
-            }     
+                
+
+             
         },
 
         error: function(jqXHR, textStatus, errorThrown) {
@@ -65,22 +116,15 @@ L.easyButton("fa-info", function (btn, map) {
         }
     });
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-          $.getJSON('http://api.geonames.org/countryCode?&type=JSON&username=ekruger', {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-              type: 'JSON'
-          }, function(result) {
-              $('select').val(result.countryCode);
-          });
-      });
-    }
-    });
+  
+//fetching country borders and zooming into them
 
-let border = null;
+    let border = null;
 
 $('select').change(function() {
+
+  let country = $('select option:selected').text();
+                $('#modalTitle').text(country);
 
   $.ajax({
       url: "php/getBorders.php",
@@ -111,16 +155,54 @@ $('select').change(function() {
       }
   });
 
+  //getting openCage data for lng and lat
+
   $.ajax({
     url: "php/getOpenCageData.php",
     type: 'GET',
-    data:{country:$('select').html()},
+    data:{country:encodeURI($('select option:selected').text())},
     dataType: 'json',
 
     success: function(result) {
         console.log(JSON.stringify(result));
 
         if (result.status.name == "ok") {
+
+          $('#callingCode').text(result.data.results[0].annotations.callingcode);
+
+
+
+           //$('#currency').prepend(`<span>${result.data.results[0].annotations.currency.symbol}</span>`);
+
+
+          //nesting get weather in openCage, b/c it using lng and lat in it's url
+
+          $.ajax({
+            url: "php/getWeather.php",
+            type: 'GET',
+            data:{
+              lat:result.data.results[0].geometry.lat,
+              lng:result.data.results[0].geometry.lng              
+            },
+            dataType: 'json',
+          
+            success: function(result) {
+                console.log(JSON.stringify(result));
+          
+                if (result.status.name == "ok") {
+
+          
+                  $('#temp').html(`${result.data.current.temp_c} &#8451;`);
+                  $('#conditions').html(`<img src="${result.data.current.condition.icon}" alt="${result.data.current.condition.text}" height="28"/>${result.data.current.condition.text}`)
+          
+                }
+              },
+          
+            error: function(jqXHR, textStatus, errorThrown) {
+                // your error code
+                console.log(jqXHR);
+            }
+          });
 
 
         }
@@ -131,6 +213,8 @@ $('select').change(function() {
         console.log(jqXHR);
     }
 });
+
+//getting continent, capital, population and currency
 
   $.ajax({
       url: "php/getBasicInfo.php",
@@ -143,60 +227,165 @@ $('select').change(function() {
 
           if (result.status.name == "ok") {
 
+            $currency = result.data[0].currencyCode;
+  
+            $('#continent').text(result.data[0].continentName);
+            //html(`<td>${result.data[0].continentName}</td>`);
 
-      
-            $('#continent').html(`<td>${result.data[0].continentName}</td>`);
-
-            $('#capitalCity').html(`<td>${result.data[0].capital}</td>`);
+            $('#capitalCity').text(result.data[0].capital);
+            //html(`<td>${result.data[0].capital}</td>`);
             
-            $('#population').html(`<td>${result.data[0].population}</td>`);
+            $('#population').text(result.data[0].population);
+            //html(`<td>${result.data[0].population}</td>`);
 
-            $('#currency').html(`<td>${result.data[0].currencyCode}</td>`);
+            $('#currency').text(result.data[0].currencyCode);
+            //html(`<td>${result.data[0].currencyCode}</td>`);
+
+            //getting earthquakes
+            //nesting it in geonames, as using north, south, east and west data.
+
+            console.log("Ellie",result.data[0].north.toFixed(1));
+            console.log("Ellie", result.data[0].south.toFixed(1));
+            console.log("Ellie", result.data[0].east.toFixed(1));
+            console.log("Ellie", result.data[0].west.toFixed(1));
+
+            $.ajax({
+              url: "php/getEarthquakes.php",
+              type: 'GET',
+              data:{
+                north: result.data[0].north.toFixed(1),
+                south: result.data[0].south.toFixed(1),
+                east: result.data[0].east.toFixed(1),
+                west: result.data[0].west.toFixed(1)
+              },
+        
+              dataType: 'json',
+        
+              success: function(result) {
+                  console.log(JSON.stringify(result));;
+
+                                         
+                  if (result.status.name == "ok") {
+
+                    for(const iterator of result.data.earthquakes) {
+
+                      /*console.log("Ellie", iterator.datetime);
+                      console.log("Ellie", iterator.depth);
+                      console.log("Ellie", iterator.lng);
+                      console.log("Ellie", iterator.lat);
+                      console.log("Ellie", iterator.src);
+                      console.log("Ellie", iterator.eqid);
+                      console.log("Ellie", iterator.magnitude);*/
+
+                      var earthquakeIcon = L.icon({
+                        iconUrl: 'img/earthquake.png',                                      
+                        popupAnchor:  [12, 0]
+                    });
+
+                      L.marker([iterator.lat, iterator.lng], {icon: earthquakeIcon}).addTo(map)
+                      .bindPopup(`<b>Earthquake</b> <br> Date: ${iterator.datetime} <br> Depth: ${iterator.depth} <br> Magnitude: ${iterator.magnitude}`)
+                      .openPopup();
+
+                    }
+
+                      
+                        
+                        }     
+                        
+                      },
+        
+              error: function(jqXHR, textStatus, errorThrown) {
+                  // your error code
+                  console.log(jqXHR);
+              }
+          });
+
+            // nesting fecthing exchange rate in geonames call, to give the oprition of using the currency fetch from geonames to call only the currency of the country selected
 
 
-          }
+            $.ajax({
+              url: "php/getExchangeRate.php",
+              type: 'GET',
+              //data:{currency:$('#currency').text()},
+              dataType: 'json',
+          
+              success: function(result) {
+                  console.log(JSON.stringify(result));
+
+                  if (result.status.name == "ok") {
+
+                    let rates = result.data.rates;
+
+                    let ratesArr = Object.entries(rates);
+
+                    for ([key, value] of ratesArr){
+                      if (key == $('#currency').text()) {
+
+                      $('#exchangeRate').text(`1 USD = ${value} ${key}`)
+                      //html(`<td>1 USD = ${value} ${key}</td>`);
+                        }                     
+                    }                 
+          
+                  }
+                },
+          
+              error: function(jqXHR, textStatus, errorThrown) {
+                  // your error code
+                  console.log(jqXHR);
+              }
+          });
+          
+        }
+      
         },
 
       error: function(jqXHR, textStatus, errorThrown) {
           // your error code
           console.log(jqXHR);
-      }
-  });
-
-  $.ajax({
-    url: "php/getExchangeRate.php",
-    type: 'GET',
-    data:{currency:$('#currency').html()},
-    dataType: 'json',
-
-    success: function(result) {
-        console.log(JSON.stringify(result));
-
-        if (result.status.name == "ok") {
-
-          $('#exchangeRate').html(`1 USD = ${result.data.exchangeRate}`);
-
-        }
       },
 
-    error: function(jqXHR, textStatus, errorThrown) {
-        // your error code
-        console.log(jqXHR);
-    }
+      
+  });
+
 });
 
-$.ajax({
-  url: "php/getWeather.php",
-  type: 'GET',
-  data:{city: result.data[0].capital},
-  dataType: 'json',
+//creating wikilinks
+
+let country = encodeURI($('select option:selected').text());
+
+let href = `https://en.wikipedia.org/wiki/${country}`;
+
+$('#wikiLinks').append(`<a href="${href}" target="blank">More Info</a>`);
+
+//getting current location
+
+
+/*$.ajax({
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      url: "php/getLocation.php",
+      type: 'GET',
+      data:{
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      },
+      dataType: 'json'
+    }, 
+    function(result) {
+      console.log(result);
+      $('select').val(result.countryCode).change();
+  });
+});
+
+  })
+  
 
   success: function(result) {
       console.log(JSON.stringify(result));
 
-      if (result.status.name == "ok") {
+      if (result.status.name == "ok") {    
 
-        $('#weather').html(result.data.current.temp_c);
 
       }
     },
@@ -205,9 +394,20 @@ $.ajax({
       // your error code
       console.log(jqXHR);
   }
-});
+});*/
 
- $country = ('select').html;
- $('#wiki').html('https://en.wikipedia.org/wiki/' . $country);
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+      $.getJSON('http://api.geonames.org/countryCode?&type=JSON&username=ekruger', {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          type: 'JSON'
+      }, function(result) {
+          console.log(result);
+          $('select').val(result.countryCode).change();
+      });
+  });
+}
+    });
 
-});
+

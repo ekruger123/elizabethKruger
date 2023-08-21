@@ -20,19 +20,12 @@
 
     $decode = json_decode($result,true);
 
-    $exchangeRate;
-
-    for ($i = 0; $i < count($decode['rates']); $i++) {
-        if($decode['rates'][$i] == $_REQUEST['currency']) {
-            $exchangeRate = $decode['rates'][$i];
-        }
-    }
      
     $output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-	$output['data'] = $exchangeRate;
+	$output['data'] = $decode;
 	
 	header('Content-Type: application/json; charset=UTF-8');
 
