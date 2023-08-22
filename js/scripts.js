@@ -157,10 +157,11 @@ $('select').change(function() {
 
   //getting openCage data for lng and lat
 
+  
   $.ajax({
     url: "php/getOpenCageData.php",
     type: 'GET',
-    data:{country:encodeURI($('select option:selected').text())},
+    data:{country:encodeURI(country)},
     dataType: 'json',
 
     success: function(result) {
@@ -235,7 +236,10 @@ $('select').change(function() {
             $('#capitalCity').text(result.data[0].capital);
             //html(`<td>${result.data[0].capital}</td>`);
             
-            $('#population').text(result.data[0].population);
+            $('#population').text(result.data[0].population.toLocaleString());
+
+           let num = 123456789;
+            console.log("Ellie", num.toLocaleString);
             //html(`<td>${result.data[0].population}</td>`);
 
             $('#currency').text(result.data[0].currencyCode);
@@ -244,10 +248,10 @@ $('select').change(function() {
             //getting earthquakes
             //nesting it in geonames, as using north, south, east and west data.
 
-            console.log("Ellie",result.data[0].north.toFixed(1));
+            /*console.log("Ellie",result.data[0].north.toFixed(1));
             console.log("Ellie", result.data[0].south.toFixed(1));
             console.log("Ellie", result.data[0].east.toFixed(1));
-            console.log("Ellie", result.data[0].west.toFixed(1));
+            console.log("Ellie", result.data[0].west.toFixed(1));*/
 
             $.ajax({
               url: "php/getEarthquakes.php",
@@ -278,8 +282,9 @@ $('select').change(function() {
                       console.log("Ellie", iterator.magnitude);*/
 
                       var earthquakeIcon = L.icon({
-                        iconUrl: 'img/earthquake.png',                                      
-                        popupAnchor:  [12, 0]
+                        iconUrl: 'img/earthquake.png',  
+                        iconSize: 32,                                    
+                        popupAnchor:  [0, 0]
                     });
 
                       L.marker([iterator.lat, iterator.lng], {icon: earthquakeIcon}).addTo(map)
@@ -347,15 +352,76 @@ $('select').change(function() {
       
   });
 
-});
+  //creating wikilinks
 
-//creating wikilinks
+ let countryURI = encodeURI($('select option:selected').text());
 
-let country = encodeURI($('select option:selected').text());
-
-let href = `https://en.wikipedia.org/wiki/${country}`;
+let href = `https://en.wikipedia.org/wiki/${countryURI}`;
 
 $('#wikiLinks').append(`<a href="${href}" target="blank">More Info</a>`);
+
+console.log("Ellie", country);
+
+$.ajax({
+              url: "php/getVolcanicEruptions.php",
+              type: 'GET',
+              data:{
+                country: country
+              },
+        
+              dataType: 'json',
+        
+              success: function(result) {
+                  console.log(JSON.stringify(result));
+
+                                         
+                  if (result.status.name == "ok") {
+                    if (Object.values(result.data).length !== 0) {
+
+                      console.log("ellie", result.data[0].fields.year);
+                    }
+
+
+                  
+                   for(const iterator of result.data) {
+
+                    /*console.log("Ellie", iterator.fields.location);
+                    console.log("Ellie", iterator.fields.status);
+                    console.log("Ellie", iterator.fields.coordinates[0]);
+                    console.log("Ellie", iterator.fields.coordinates[1]);
+                    console.log("Ellie", iterator.fields.elevation);
+                    console.log("Ellie", iterator.fields.year);
+                    console.log("Ellie", iterator.fields.name);
+                    console.log("Ellie", iterator.fields.type);*/
+
+                        var volcanoeIcon = L.icon({
+                        iconUrl: 'img/volcanoe1.png',
+                        iconSize: 35,                                     
+                        popupAnchor:  [0,-5]
+                    });
+
+                      L.marker([iterator.fields.coordinates[0], iterator.fields.coordinates[1]], {icon: volcanoeIcon}).addTo(map)
+                      .bindPopup(`<b>Volcanic Eruption</b> <br> Name: ${iterator.fields.name} <br> Type: ${iterator.fields.type} <br> Year: ${iterator.fields.year} <br> Elevation: ${iterator.fields.elevation} <br> Status: ${iterator.fields.status}`)
+                      .openPopup();
+
+                    }
+
+                      
+                        
+                        }    
+                        
+                      },
+        
+              error: function(jqXHR, textStatus, errorThrown) {
+                  // your error code
+                  console.log(jqXHR);
+              }
+          });
+
+});
+
+
+
 
 //getting current location
 

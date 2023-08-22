@@ -7,7 +7,7 @@
 
     $executionStartTime = microtime(true);
 
-	$url = 'http://api.geonames.org/earthquakesJSON?formatted=true&north='. $_REQUEST['north'] .'&south='. $_REQUEST['south'] .'&east='. $_REQUEST['east'] .'&west='. $_REQUEST['west'] .'&username=ekruger&style=full';
+	$url = 'https://public.opendatasoft.com/api/records/1.0/search/?dataset=significant-volcanic-eruption-database&q=&facet=year&facet=tsu&facet=eq&facet=name&facet=location&facet=country&facet=type&facet=status&facet=total_damage_description&facet=total_houses_destroyed_description&facet=houses_damaged_description';
 
     $ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -19,12 +19,22 @@
 	curl_close($ch);
 
     $decode = json_decode($result,true);
+
+	$volcanicEruptions = [];
+
+	for ($i = 0; $i < count($decode['records']); $i++) {
+
+	    if ($decode['records'][$i]['fields']['country'] == $_REQUEST['country']) 
+        array_push($volcanicEruptions, $decode['records'][$i]);     
+    };
+
+	
      
     $output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-	$output['data'] = $decode;
+	$output['data'] = $volcanicEruptions;
 	
 	header('Content-Type: application/json; charset=UTF-8');
 
