@@ -29,11 +29,6 @@ L.easyButton("fa-info", function (btn, map) {
   }).addTo(map);
 
 
-//marker
-
-/*L.marker([51.5, -0.09]).addTo(map)
-    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-    .openPopup();*/
 
   //onload button
 
@@ -65,7 +60,7 @@ L.easyButton("fa-info", function (btn, map) {
 
                 }
 
-
+// adding flags next to country name in slect
                     $.ajax({
                       url: "php/getFlags.php",
                       type: 'GET',
@@ -80,17 +75,17 @@ L.easyButton("fa-info", function (btn, map) {
 
                             let flagsArr = Object.entries(flagsData);
 
-                            /*$('#selectCountry').find('option').each(function(index,element){
+                            $('#selectCountry').find('option').each(function(index,element){
                               //console.log("Ellie",element.value);
                                                  
                               for ([key, val] of flagsArr){
                                 if (key == element.value) {
                                   
-                                  $(`#${element.value}`).prepend(`<span><img src=${val.image} alt="${element.text} flag" height="32px" /></span>`);
+                                  $(`#${element.value}`).prepend(`<span><img src="${val.image}" alt="${element.text} flag" height="32px" /></span>`);
                                                      
                                 }
                               }
-                              });*/                              
+                              });                            
               
                           }     
                       },
