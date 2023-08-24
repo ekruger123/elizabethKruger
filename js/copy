@@ -1,0 +1,34 @@
+if (navigator.geolocation) {
+$.ajax({
+  navigator:geolocation.getCurrentPosition(function(position) {
+      url: "php/getLocation.php"
+      type: 'GET'
+      data:{
+        lat: position.coords.latitude
+        lng: position.coords.longitude
+      }
+      dataType: 'json'
+    }, 
+
+
+    function(result) {
+      console.log(result);
+      $('select').val(result.data).change();
+  }),
+
+  success: function(result) {
+      console.log(JSON.stringify(result));
+
+      if (result.status.name == "ok") {    
+
+
+      }
+    },
+
+  error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
+      console.log(jqXHR);
+  }
+})
+
+    };

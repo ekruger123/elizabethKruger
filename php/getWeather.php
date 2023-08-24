@@ -7,7 +7,7 @@
 
     $executionStartTime = microtime(true);
 
-    $url = 'https://api.weatherapi.com/v1/current.json?key=82fd07c6d96a410383d95753231608&q=' . $_REQUEST['lat'] . ',' . $_REQUEST['lng'];
+    $url = 'https://api.weatherapi.com/v1/forecast.json?key=82fd07c6d96a410383d95753231608&q=' . $_REQUEST['city'] . '&days=3';
 
     $ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -20,13 +20,6 @@
 
     $decode = json_decode($result,true);
 
-    /*$weather;
-
-    for ($i = 0; $i < count($decode['location']); $i++) {
-        if($decode['location'][$i]['name'] == $_REQUEST['city']) {
-            $weather = $decode['location'][$i];
-        }
-    }*/
      
     $output['status']['code'] = "200";
 	$output['status']['name'] = "ok";

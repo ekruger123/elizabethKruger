@@ -31,7 +31,7 @@
 
 <div id="map"></div>
 
-<div id="exampleModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+<div id="overviewModal" class="modal" data-bs-backdrop="false" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content shadow">
       <div class="modal-header bg-success bg-gradient text-white">
@@ -126,22 +126,6 @@
           <tr>
 
             <td class="text-center">
-              <i class="fa-solid fa-heart fa-xl text-success"></i>
-            </td>
-
-            <td>
-              <img width="20" height="20" src="https://img.icons8.com/ios/50/000000/exchange.png" alt="exchange"/>Exchange Rate
-            </td>
-
-            <td id="exchangeRate" class="text-end">
-              value
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td class="text-center">
               <i class="fa-solid fa-bath fa-xl text-success"></i>
             </td>
 
@@ -197,15 +181,16 @@
             </td>
 
             <td>
-              <img width="20" height="20" src="https://img.icons8.com/color/48/wikipedia--v3.png" alt="wikipedia"/>
-              Wikipedia Links
+              Local Time
             </td>
 
-            <td id="wikiLinks" class="text-end">
+            <td id="localTimes" class="text-end">
               
             </td>
 
           </tr>
+
+          
           <!--<tr>
 
             <td class="text-center">
@@ -247,8 +232,257 @@
   </div>
 </div>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<div id="wikiModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-success bg-gradient text-white">
+        <h5 class="modal-title" id="modalTitle"><img width="20" height="20" src="https://img.icons8.com/color/48/wikipedia--v3.png" alt="wikipedia"/>Wikipedia</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"><img src=""/></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <tr>
+
+            <td id="wikiTitle" class="text-start">
+              <b>value</b>
+            </td>
+
+          </tr>
+          <tr>
+
+            <td id="wikiSummary" class="text-start">
+              value
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td id="wikiLink" class="text-start">
+              value
+            </td>
+
+          </tr>
+
+                   
+                     
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="currencyConverterModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-success bg-gradient text-white">
+        <h5 class="modal-title" id="modalTitle">Currency Converter</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"><img src=""/></button>
+      </div>
+      <div class="modal-body">
+        <!--<table class="table table-striped">
+          <tr>
+
+            <td class="text-start">
+              Amount
+              <input id="amount" type="number">
+              
+            </td>
+
+          </tr> -->
+
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default" >Amount</span>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="amount">
+          </div>
+
+          <div>
+            <span>From</span>
+            <select class="form-select" aria-label="Default select example" id="selectFrom">
+
+            </select>
+          </div>
+
+          <div>
+            <span>To</span>
+            <select class="form-select" aria-label="Default select example" id="selectTo">
+
+            </select>
+          </div>
+
+          <div class="d-inline p-2" id="convertedAmount"></div>
+
+          <!--<tr>
+
+            <td id="from" class="text-center">
+              From
+              <span id="selectContainerFrom">
+                <select id="selectFrom" class="shadow-lg p-3 mb-5 bg-body rounded">
+                  
+                </select>
+              </span>
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td id="to" class="text-center">
+              To
+              <span id="selectContainerTo">
+                <select id="selectTo" class="shadow-lg p-3 mb-5 bg-body rounded">
+                  
+                </select>
+              </span>
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td id="convertedAmount" class="text-center">
+             
+            </td>
+
+          </tr>
+
+                   
+                     
+        </table>-->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="weatherModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-success bg-gradient text-white">
+        <h5 class="modal-title" id="weatherModalTitle">Weather</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"><img src=""/></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="modal-body">
+        
+          <div id="pre-load"></div>
   
+          <div class="row">
+  
+            <div class="col border m-2">
+  
+              <p class="fw-bold fs-5 mt-1">TODAY</p>
+              
+              <div class="row">
+                
+                <div class="col text-center m-3">
+                  
+                  <p id="todayConditions" class="fw-bold fs-6"></p>
+                    
+                </div>
+                
+                <div class="col text-center" id="todayIcon">
+                  
+                          
+                </div>              
+  
+                <div class="col text-center">
+                  
+                  <p class="fw-bold fs-4 mb-0"><span id="todayMaxTemp">3</span><sup>o</sup><span class="tempMetric">c</span></p>
+                  <p class="fs-5 mt-0 text-secondary"><span id="todayMinTemp">-2</span><sup>o</sup><span class="tempMetric">c</span></p>
+                    
+                </div>              
+                
+              </div>
+  
+            </div>   
+  
+          </div>
+  
+          <div class="row">
+  
+            <div class="col border m-2">
+              
+              <div class="row">
+                
+                <div class="col text-center">
+  
+                  <p id="day1Date" class="fw-bold fs-6 mt-3"></p>
+                  
+                </div>
+                
+              </div>
+              
+              <div class="row">
+                
+                <div class="col text-center">
+                  
+                  <p class="fw-bold fs-4 mb-0"><span id="day1MaxTemp"></span><sup>o</sup>c</p>
+                  <p class="fs-5 mt-0 text-secondary"><span id="day1MinTemp"></span><sup>o</sup>c</p>
+                  
+                </div>
+                
+                <div class="col text-center" id="day1Icon">
+                  
+                  
+                  
+                </div>    
+                
+              </div>
+              
+            </div>   
+  
+            <div class="col border m-2">
+  
+              <div class="row">
+                
+                <div class="col text-center">
+  
+                  <p id="day2Date" class="fw-bold fs-6 mt-3">Fri 16th</p>
+                  
+                </div>
+                
+              </div>
+              
+              <div class="row">
+                
+                <div class="col text-center">
+                  
+                  <p class="fw-bold fs-4 mb-0"><span id="day2MaxTemp"></span><sup>o</sup>c</p>
+                  <p class="fs-5 mt-0 text-secondary"><span id="day2MinTemp"></span><sup>o</sup>c</p>
+                  
+                </div>
+                
+                <div class="col text-center">
+                  
+                  <img id="day2Icon" src="" alt="" title="">
+                  
+                </div>    
+                
+              </div>
+              
+            </div>         
+  
+         </div>   
+      
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script> 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -259,7 +493,7 @@
   
   <script src="js/scripts.js"></script>
 
-  <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
+  
 
 </body>
 

@@ -7,7 +7,10 @@
 
     $executionStartTime = microtime(true);
 
-    $url = 'http://api.geonames.org/countryCodeJSON?lat='.$_REQUEST['lat'].'&lng='.$_REQUEST['lng'].'&username=ekruger';
+	//$url = 'http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=' . $_REQUEST['country'] . '&maxRows=10&username=ekrugero&style=full';
+
+	$url = 'http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=' . $_REQUEST['north'] .'&south='. $_REQUEST['south'] .'&east='. $_REQUEST['east'] .'&west='. $_REQUEST['west'] .'&username=ekruger&style=full';
+
     $ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -19,12 +22,20 @@
 
     $decode = json_decode($result,true);
 
+	$wikiData = [];
+
+	for ($i = 0; $i < count($decode['geonames']); $i++) {
+
+	    if ($decode['geonames'][$i]['title'] == $_REQUEST['country']) 
+        array_push($wikiData, $decode['geonames'][$i]);     
+    };
+
      
     $output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-	$output['data'] = $decode['countryCode'];
+	$output['data'] = $wikiData;
 	
 	header('Content-Type: application/json; charset=UTF-8');
 
