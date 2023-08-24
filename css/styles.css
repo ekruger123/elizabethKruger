@@ -28,3 +28,8 @@ html, body {
 td img {
   margin-right: 16px;
 }
+
+#convertedAmount {
+  border-color: #212529;
+
+}

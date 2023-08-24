@@ -28,15 +28,15 @@ L.easyButton("fa-info", function (btn, map) {
     $("#overviewModal").modal("show");
   }).addTo(map);
 
-L.easyButton("fa-info", function (btn, map) {
+L.easyButton("fa-wikipedia-w", function (btn, map) {
     $("#wikiModal").modal("show");
   }).addTo(map);
 
-L.easyButton("fa-info", function (btn, map) {
+L.easyButton("fa-arrow-right-arrow-left", function (btn, map) {
     $("#currencyConverterModal").modal("show");
   }).addTo(map);
 
-L.easyButton("fa-info", function (btn, map) {
+L.easyButton("fa-cloud", function (btn, map) {
     $("#weatherModal").modal("show");
   }).addTo(map);
 
@@ -126,7 +126,7 @@ L.easyButton("fa-info", function (btn, map) {
         }
     });
 
-    $.ajax({
+   /* $.ajax({
       url: "php/getExchangeRate.php",
       type: 'GET',
       dataType: 'json',
@@ -156,7 +156,7 @@ L.easyButton("fa-info", function (btn, map) {
                 // your error code
                 console.log(jqXHR);
             }
-        });
+        });*/
 
         
 $('#amount').change(function(){
@@ -364,6 +364,13 @@ $('#selectCountry').change(function() {
                     
 
                       L.marker([iterator.lat, iterator.lng], {icon: earthquakeIcon}).bindPopup(`<b>Earthquake</b> <br> Date: ${iterator.datetime} <br> Depth: ${iterator.depth} <br> Magnitude: ${iterator.magnitude}`).addTo(map);
+
+                      /*var markers = L.markerClusterGroup();
+                      markers.addLayer(L.marker(getRandomLatLng(map)));
+
+                      map.addLayer(markers);*/
+
+
 
                     }
 
