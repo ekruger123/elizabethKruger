@@ -28,7 +28,7 @@ L.easyButton("fa-info", function (btn, map) {
     $("#overviewModal").modal("show");
   }).addTo(map);
 
-L.easyButton("fa-wikipedia-w", function (btn, map) {
+L.easyButton("fa-brands fa-wikipedia-w", function (btn, map) {
     $("#wikiModal").modal("show");
   }).addTo(map);
 
@@ -346,15 +346,9 @@ $('#selectCountry').change(function() {
                                          
                   if (result.status.name == "ok") {
 
-                    for(const iterator of result.data.earthquakes) {
+                    var markers = L.markerClusterGroup();
 
-                      /*console.log("Ellie", iterator.datetime);
-                      console.log("Ellie", iterator.depth);
-                      console.log("Ellie", iterator.lng);
-                      console.log("Ellie", iterator.lat);
-                      console.log("Ellie", iterator.src);
-                      console.log("Ellie", iterator.eqid);
-                      console.log("Ellie", iterator.magnitude);*/
+                    for(const iterator of result.data.earthquakes) {
 
                       var earthquakeIcon = L.icon({
                         iconUrl: 'img/earthquake.png',  
@@ -363,23 +357,14 @@ $('#selectCountry').change(function() {
                     });
 
                       var earthquakeMarker = L.marker([iterator.lat, iterator.lng], {icon: earthquakeIcon}).bindPopup(`<b>Earthquake</b> <br> Date: ${iterator.datetime} <br> Depth: ${iterator.depth} <br> Magnitude: ${iterator.magnitude}`);
- 
-
-                        var markers = L.markerClusterGroup();
 
                         markers.addLayer(earthquakeMarker);                     
 
                         map.addLayer(markers);
 
-
-
-                    }
-
-                      
-                        
-                        }     
-                        
-                      },
+                    }                        
+                   }                        
+                  },
         
               error: function(jqXHR, textStatus, errorThrown) {
                   // your error code
