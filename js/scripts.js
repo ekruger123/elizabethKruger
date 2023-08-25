@@ -149,6 +149,7 @@ L.easyButton("fa-cloud", function (btn, map) {
 
               }
             }
+          
           },
           
 
@@ -361,14 +362,14 @@ $('#selectCountry').change(function() {
                         popupAnchor:  [0, 0]
                     });
 
-                    
+                      var earthquakeMarker = L.marker([iterator.lat, iterator.lng], {icon: earthquakeIcon}).bindPopup(`<b>Earthquake</b> <br> Date: ${iterator.datetime} <br> Depth: ${iterator.depth} <br> Magnitude: ${iterator.magnitude}`);
+ 
 
-                      L.marker([iterator.lat, iterator.lng], {icon: earthquakeIcon}).bindPopup(`<b>Earthquake</b> <br> Date: ${iterator.datetime} <br> Depth: ${iterator.depth} <br> Magnitude: ${iterator.magnitude}`).addTo(map);
+                        var markers = L.markerClusterGroup();
 
-                      /*var markers = L.markerClusterGroup();
-                      markers.addLayer(L.marker(getRandomLatLng(map)));
+                        markers.addLayer(earthquakeMarker);                     
 
-                      map.addLayer(markers);*/
+                        map.addLayer(markers);
 
 
 
