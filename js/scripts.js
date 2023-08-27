@@ -40,6 +40,10 @@ L.easyButton("fa-cloud", function (btn, map) {
     $("#weatherModal").modal("show");
   }).addTo(map);
 
+  L.easyButton("fa-flag", function (btn, map) {
+    $("#flags").modal("show");
+  }).addTo(map);
+
 
   //onload button
 
@@ -76,7 +80,7 @@ L.easyButton("fa-cloud", function (btn, map) {
                 
 
 // adding flags next to country name in slect
-                    $.ajax({
+            /*        $.ajax({
                       url: "php/getFlags.php",
                       type: 'GET',
                       dataType: 'json',
@@ -109,7 +113,7 @@ L.easyButton("fa-cloud", function (btn, map) {
                           // your error code
                           console.log(jqXHR);
                       }
-                  });
+                  });*/
 
 
 
@@ -126,63 +130,13 @@ L.easyButton("fa-cloud", function (btn, map) {
         }
     });
 
-   /* $.ajax({
-      url: "php/getExchangeRate.php",
-      type: 'GET',
-      dataType: 'json',
-
-      success: function(result) {
-          console.log(JSON.stringify(result));
-
-          if (result.status.name == "ok") {
-
-            let rates = result.data.rates;
-
-            let ratesArr = Object.entries(rates);
-
-            for ([key, value] of ratesArr){
-
-              $('#selectFrom').append(`<option class="${key}" value="${value}">${key}</option>`)
-
-              $('#selectTo').append(`<option class="${key}" value="${value}">${key}</option>`)
-            
-
-              }
-            }
-          
-          },
-          
-
-              error: function(jqXHR, textStatus, errorThrown) {
-                // your error code
-                console.log(jqXHR);
-            }
-        });*/
-
-        
-$('#amount').change(function(){
-
-  let amount = $('#amount').val();
-  let from = $('#selectFrom').val();
-  let to = $('#selectTo').val();
-
-  let convertedAmount = (amount/from)*to;
-
-  let nf = new Intl.NumberFormat('en-US');
-            
-  $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
-
-  console.log("amount", amount);
-  console.log("from", from);
-  console.log("to", to);
-  console.log("convertedAmount", convertedAmount);
-})
-    
-
-  
 //fetching country borders and zooming into them
 
     let border = null;
+
+    let markers = null;
+
+    //let volMarkers = null;
 
 $('#selectCountry').change(function() {
 
@@ -220,6 +174,46 @@ $('#selectCountry').change(function() {
       }
   });
 
+  //getting restcountries data for flag model plus info
+
+  $.ajax({
+    url: "php/getRestCountries.php",
+    type: 'GET',
+    data:{
+      country: encodeURI(country)             
+    },
+    dataType: 'json',
+  
+    success: function(result) {
+        console.log(JSON.stringify(result));
+  
+        if (result.status.name == "ok") {
+          $('#countryFlag').html(`<img src=${result.data[0].flags.png} alt=${result.data[0].flags.alt} width="200"></img>`);
+
+          $('#coatOfArms').html(`<img src=${result.data[0].coatOfArms.png} alt="Coat of arms" width="200"></img>`);   
+          
+          $('#drivesOn').text(result.data[0].car.side);
+
+          /*let languagesData = result.data[0].languages;
+
+          let languagesArr = Object.entries(languagesData);
+
+          for ([key, val] of languagesArr) {
+            console.log("Ellie", val);
+            
+            $('#language').text(val);
+          } */
+  
+        }
+      },
+  
+    error: function(jqXHR, textStatus, errorThrown) {
+        // your error code
+        console.log(jqXHR);
+    }
+  });
+
+
   //getting openCage data for lng and lat
 
   
@@ -255,7 +249,7 @@ $('#selectCountry').change(function() {
 //getting continent, capital, population and currency
 
   $.ajax({
-      url: "php/getBasicInfo.php",
+      url: "php/getGeonames.php",
       type: 'GET',
       data:{country:$('select').val()},
       dataType: 'json',
@@ -282,6 +276,73 @@ $('#selectCountry').change(function() {
 
             $('#currency').text(result.data[0].currencyCode);
             //html(`<td>${result.data[0].currencyCode}</td>`);
+
+            let currency = (result.data[0].currencyCode);
+
+            /*$.ajax({
+              url: "php/getExchangeRate.php",
+              type: 'GET',
+              dataType: 'json',
+        
+              success: function(result) {
+                  console.log(JSON.stringify(result));
+        
+                  if (result.status.name == "ok") {
+        
+                    let rates = result.data.rates;
+        
+                    let ratesArr = Object.entries(rates);
+        
+                    for ([key, value] of ratesArr){
+        
+                      
+
+                      if (key === "USD") {
+                        $('#selectFrom').append(`<option class="${key}" value="${value}" selected="selected">${key}</option>`)
+                      } else {
+                        $('#selectFrom').append(`<option class="${key}" value="${value}">${key}</option>`)
+                      }
+        
+
+                      if (key === currency) {
+                        $('#selectTo').append(`<option class="${key}" value="${value}" selected="selected">${key}</option>`)
+                      } else {
+                        $('#selectTo').append(`<option class="${key}" value="${value}">${key}</option>`)
+                      }
+        
+                      
+                    
+        
+                      }
+                    }
+                  
+                  },
+                  
+        
+                      error: function(jqXHR, textStatus, errorThrown) {
+                        // your error code
+                        console.log(jqXHR);
+                    }
+                }); */
+        
+                
+        $('#amount').change(function(){
+        
+          let amount = $('#amount').val();
+          let from = $('#selectFrom').val();
+          let to = $('#selectTo').val();
+        
+          let convertedAmount = (amount/from)*to;
+        
+          let nf = new Intl.NumberFormat('en-US');
+                    
+          $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
+        
+          console.log("amount", amount);
+          console.log("from", from);
+          console.log("to", to);
+          console.log("convertedAmount", convertedAmount);
+        })
 
             $.ajax({
               url: "php/getWeather.php",
@@ -341,12 +402,17 @@ $('#selectCountry').change(function() {
               dataType: 'json',
         
               success: function(result) {
-                  console.log(JSON.stringify(result));;
+                  console.log(JSON.stringify(result));
+
+                  if (markers) {
+                    markers.clearLayers();
+                  }
 
                                          
                   if (result.status.name == "ok") {
 
-                    var markers = L.markerClusterGroup();
+                    
+                    markers = L.markerClusterGroup();
 
                     for(const iterator of result.data.earthquakes) {
 
@@ -373,12 +439,6 @@ $('#selectCountry').change(function() {
           });
 
           //getting wiki data using, north, south, east west
-
-
-          console.log("Ellie",result.data[0].north.toFixed(1));
-            console.log("Ellie", result.data[0].south.toFixed(1));
-            console.log("Ellie", result.data[0].east.toFixed(1));
-            console.log("Ellie", result.data[0].west.toFixed(1));
 
           $.ajax({
             url: "php/getWikipedia.php",
@@ -434,7 +494,8 @@ let href = `https://en.wikipedia.org/wiki/${countryURI}`;
 $('#wikiLinks').html(`<a href="${href}" target="blank">More Info</a>`);
 
 
-$.ajax({
+
+/*$.ajax({
               url: "php/getVolcanicEruptions.php",
               type: 'GET',
               data:{
@@ -446,37 +507,30 @@ $.ajax({
               success: function(result) {
                   console.log(JSON.stringify(result));
 
+                  if (volMarkers) {
+                    volMarkers.clearLayers();
+                  }
+
                                          
                   if (result.status.name == "ok") {
-                    /*if (Object.values(result.data).length !== 0) {
-
-                      console.log("ellie", result.data[0].fields.year);
-                    }*/
-
-
-                  
+                                      
                    for(const iterator of result.data) {
 
-                    /*console.log("Ellie", iterator.fields.location);
-                    console.log("Ellie", iterator.fields.status);
-                    console.log("Ellie", iterator.fields.coordinates[0]);
-                    console.log("Ellie", iterator.fields.coordinates[1]);
-                    console.log("Ellie", iterator.fields.elevation);
-                    console.log("Ellie", iterator.fields.year);
-                    console.log("Ellie", iterator.fields.name);
-                    console.log("Ellie", iterator.fields.type);*/
-
+                    
                         var volcanoeIcon = L.icon({
                         iconUrl: 'img/volcanoe1.png',
                         iconSize: 35,                                     
                         popupAnchor:  [0,-5]
                     });
 
-                      L.marker([iterator.fields.coordinates[0], iterator.fields.coordinates[1]], {icon: volcanoeIcon}).addTo(map)
-                      .bindPopup(`<b>Volcanic Eruption</b> <br> Name: ${iterator.fields.name} <br> Type: ${iterator.fields.type} <br> Year: ${iterator.fields.year} <br> Elevation: ${iterator.fields.elevation} <br> Status: ${iterator.fields.status}`)
-                      .openPopup();
+                      volMarkers = L.marker([iterator.fields.coordinates[0], iterator.fields.coordinates[1]], {icon: volcanoeIcon}).addTo(map)
+                      .bindPopup(`<b>Volcanic Eruption</b> <br> Name: ${iterator.fields.name} <br> Type: ${iterator.fields.type} <br> Year: ${iterator.fields.year} <br> Elevation: ${iterator.fields.elevation} <br> Status: ${iterator.fields.status}`);
+
+                      map.addLayer(volMarkers);
 
                     }
+
+                    
 
                       
                         
@@ -488,7 +542,7 @@ $.ajax({
                   // your error code
                   console.log(jqXHR);
               }
-          });
+          });*/
 
 });
 
