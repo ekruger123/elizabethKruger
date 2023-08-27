@@ -279,7 +279,7 @@ $('#selectCountry').change(function() {
 
             let currency = (result.data[0].currencyCode);
 
-            /*$.ajax({
+            $.ajax({
               url: "php/getExchangeRate.php",
               type: 'GET',
               dataType: 'json',
@@ -323,7 +323,7 @@ $('#selectCountry').change(function() {
                         // your error code
                         console.log(jqXHR);
                     }
-                }); */
+                }); 
         
                 
         $('#amount').change(function(){
