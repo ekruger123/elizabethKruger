@@ -275,7 +275,7 @@ $('#selectCountry').change(function() {
 
             let currency = (result.data[0].currencyCode);
 
-           /* $.ajax({
+           $.ajax({
               url: "php/getExchangeRate.php",
               type: 'GET',
               dataType: 'json',
@@ -350,7 +350,7 @@ $('#selectCountry').change(function() {
           let nf = new Intl.NumberFormat('en-US');
                     
           $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
-        }) */
+        }) 
 
             $.ajax({
               url: "php/getWeather.php",
