@@ -7,8 +7,6 @@
 
     $executionStartTime = microtime(true);
 
-	//$url = 'http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=' . $_REQUEST['country'] . '&maxRows=10&username=ekrugero&style=full';
-
 	$url = 'http://api.geonames.org/wikipediaBoundingBoxJSON?formatted=true&north=' . $_REQUEST['north'] .'&south='. $_REQUEST['south'] .'&east='. $_REQUEST['east'] .'&west='. $_REQUEST['west'] .'&username=ekruger&style=full';
 
     $ch = curl_init();

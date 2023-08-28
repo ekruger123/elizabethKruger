@@ -141,7 +141,7 @@ L.easyButton("fa-cloud", function (btn, map) {
 $('#selectCountry').change(function() {
 
   let country = $('#selectCountry option:selected').text();
-                //$('#modalTitle').text(country);
+                
 
   $.ajax({
       url: "php/getBorders.php",
@@ -220,7 +220,7 @@ $('#selectCountry').change(function() {
   $.ajax({
     url: "php/getOpenCageData.php",
     type: 'GET',
-    data:{country:encodeURI(country)},
+    data:{country:encodeURI($('#selectCountry option:selected').text())},
     dataType: 'json',
 
     success: function(result) {
@@ -262,24 +262,20 @@ $('#selectCountry').change(function() {
             $currency = result.data[0].currencyCode;
   
             $('#continent').text(result.data[0].continentName);
-            //html(`<td>${result.data[0].continentName}</td>`);
+            
 
             $('#capitalCity').text(result.data[0].capital);
-            //html(`<td>${result.data[0].capital}</td>`);
+            
 
             let nf = new Intl.NumberFormat('en-US');
             
             $('#population').text(nf.format(result.data[0].population));
 
-           
-            //html(`<td>${result.data[0].population}</td>`);
-
             $('#currency').text(result.data[0].currencyCode);
-            //html(`<td>${result.data[0].currencyCode}</td>`);
 
             let currency = (result.data[0].currencyCode);
 
-            $.ajax({
+           /* $.ajax({
               url: "php/getExchangeRate.php",
               type: 'GET',
               dataType: 'json',
@@ -294,8 +290,6 @@ $('#selectCountry').change(function() {
                     let ratesArr = Object.entries(rates);
         
                     for ([key, value] of ratesArr){
-        
-                      
 
                       if (key === "USD") {
                         $('#selectFrom').append(`<option class="${key}" value="${value}" selected="selected">${key}</option>`)
@@ -309,24 +303,43 @@ $('#selectCountry').change(function() {
                       } else {
                         $('#selectTo').append(`<option class="${key}" value="${value}">${key}</option>`)
                       }
-        
-                      
-                    
-        
-                      }
-                    }
-                  
+                     }
+                   }
                   },
-                  
-        
                       error: function(jqXHR, textStatus, errorThrown) {
                         // your error code
                         console.log(jqXHR);
                     }
                 }); 
-        
-                
-        $('#amount').change(function(){
+
+        $('#selectFrom').change(function() {
+          if($('#amount').val()){
+            $('#amount').val('');
+          }
+          if($('#convertedAmount').text()){
+            $('#convertedAmount').text('');
+          }
+        })
+
+        $('#selectTo').change(function() {
+          if($('#amount').val()){
+            $('#amount').val('');
+          }
+          if($('#convertedAmount').text()){
+            $('#convertedAmount').text('');
+          }          
+        })
+
+        $('#selectCountry').change(function() {
+          if($('#amount').val()){
+            $('#amount').val('');
+          }
+          if($('#convertedAmount').text()){
+            $('#convertedAmount').text('');
+          }          
+        })
+                 
+        $('#amount').keyup(function(){
         
           let amount = $('#amount').val();
           let from = $('#selectFrom').val();
@@ -337,12 +350,7 @@ $('#selectCountry').change(function() {
           let nf = new Intl.NumberFormat('en-US');
                     
           $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
-        
-          console.log("amount", amount);
-          console.log("from", from);
-          console.log("to", to);
-          console.log("convertedAmount", convertedAmount);
-        })
+        }) */
 
             $.ajax({
               url: "php/getWeather.php",
@@ -372,10 +380,7 @@ $('#selectCountry').change(function() {
                     $('#day2Icon').html(`<img src=${result.data.forecast.forecastday[2].day.condition.icon} alt="weather in two days">`);
                     $('#day2MaxTemp').text(result.data.forecast.forecastday[2].day.maxtemp_c);
                     $('#day2MinTemp').text(result.data.forecast.forecastday[2].day.mintemp_c);
-  
-            
-                
-            
+
                   }
                 },
             
@@ -461,7 +466,9 @@ $('#selectCountry').change(function() {
                 if (result.status.name == "ok") {
                   $('#wikiTitle').html(`<b>${result.data[0].title}</b>`)
                   $('#wikiSummary').html(result.data[0].summary);   
-                  $('#wikiLink').html(`<a href=${result.data[0].wikipediaUrl} target="blank">More Info</a>`);                      
+                  $('#wikiLink').html(`<a href="https://${result.data[0].wikipediaUrl}" target="blank">More Info</a>`);  
+                  
+                  console.log("Ellie", result.data[0].wikipediaUrl)
                       
                       }     
                       
