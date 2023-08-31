@@ -312,7 +312,7 @@ $('#selectCountry').change(function() {
                     }
                 }); 
 
-        $('#selectFrom').change(function() {
+       /* $('#selectFrom').change(function() {
           if($('#amount').val()){
             $('#amount').val('');
           }
@@ -328,7 +328,7 @@ $('#selectCountry').change(function() {
           if($('#convertedAmount').text()){
             $('#convertedAmount').text('');
           }          
-        })
+        })*/
 
         $('#selectCountry').change(function() {
           if($('#amount').val()){
@@ -351,6 +351,32 @@ $('#selectCountry').change(function() {
                     
           $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
         }) 
+        
+        $('#selectFrom').change(function(){
+        
+          let amount = $('#amount').val();
+          let from = $('#selectFrom').val();
+          let to = $('#selectTo').val();
+        
+          let convertedAmount = (amount/from)*to;
+        
+          let nf = new Intl.NumberFormat('en-US');
+                    
+          $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
+        })
+        
+        $('#selectTo').change(function(){
+        
+          let amount = $('#amount').val();
+          let from = $('#selectFrom').val();
+          let to = $('#selectTo').val();
+        
+          let convertedAmount = (amount/from)*to;
+        
+          let nf = new Intl.NumberFormat('en-US');
+                    
+          $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
+        })
 
             $.ajax({
               url: "php/getWeather.php",
@@ -466,9 +492,7 @@ $('#selectCountry').change(function() {
                 if (result.status.name == "ok") {
                   $('#wikiTitle').html(`<b>${result.data[0].title}</b>`)
                   $('#wikiSummary').html(result.data[0].summary);   
-                  $('#wikiLink').html(`<a href="https://${result.data[0].wikipediaUrl}" target="blank">More Info</a>`);  
-                  
-                  console.log("Ellie", result.data[0].wikipediaUrl)
+                  $('#wikiLink').html(`<a href="https://${result.data[0].wikipediaUrl}" target="blank">More Info</a>`);
                       
                       }     
                       
