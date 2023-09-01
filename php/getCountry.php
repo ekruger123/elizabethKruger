@@ -21,6 +21,10 @@
     $countries = [];
     
     for ($i = 0; $i < count($decode['features']); $i++) {
+        if ($decode['features'][$i]['properties']['iso_a2'] === "-99") {
+            continue;
+        }
+        
         array_push($countries,$decode['features'][$i]['properties']);     
     };
 

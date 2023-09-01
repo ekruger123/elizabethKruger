@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "bootstrap-icons": "^1.10.5",
     "leaflet-easybutton": "^2.4.0",
+    "leaflet-extra-markers": "^1.2.2",
     "leaflet.markercluster": "^1.5.3"
   }
 }

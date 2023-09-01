@@ -12,6 +12,12 @@
     <link href="libraries-and-plugins/fontawesome/css/fontawesome.css" rel="stylesheet">
     <link href="libraries-and-plugins/fontawesome/css/solid.css" rel="stylesheet">
     <link href="libraries-and-plugins/fontawesome/css/brands.css" rel="stylesheet">
+    <link href="libraries-and-plugins/fontawesome/css/regular.min.css" rel="stylesheet">
+    <link href="libraries-and-plugins/fontawesome/css/svg-with-js.min.css" rel="stylesheet">
+    <link href="libraries-and-plugins/fontawesome/css/v4-font-face.min.css" rel="stylessheet">
+    <link href="libraries-and-plugins/fontawesome/css/v4-shims.min.css" rel="stylessheet">
+    <link href="libraries-and-plugins/fontawesome/css/v5-font-face.css" rel="stylessheet">
+    <link href="libraries-and-plugins/fontawesome/css/all.min.css" rel="stylessheet">
    
     <link href="libraries-and-plugins/leaflet-easybutton/src/easy-button.css" rel="stylesheet">
 
@@ -22,11 +28,18 @@
 
     <link href="libraries-and-plugins/leaflet.markercluster/dist/MarkerCluster.css rel="stylesheet>
     <link href="libraries-and-plugins/leaflet.markercluster/dist/MarkerCluster.Default.css"  rel="stylesheet">
+
+    <link rel="stylesheet" href="libraries-and-plugins/leaflet-extra-markers/src/assets/css/leaflet.extra-markers.css">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
     
 </head>
 <body>
 
-  <div id='loader'class="text-center">
+  <div id='loader'class="text-center position-fixed top-50 start-50">
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -81,6 +94,23 @@
             </td>
 
           </tr>
+
+          <tr>
+
+            <td class="text-center">
+              <i class="fa-solid fa-flag fa-xl text-success"></i>
+            </td>
+
+            <td>
+              Flag
+            </td>
+
+            <td id="flag" class="text-end">
+              value
+            </td>
+
+          </tr>
+
           <tr>
 
             <td class="text-center">
@@ -213,7 +243,63 @@
   </div>
 </div>
 
-<div id="currencyConverterModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+<div id="currencyConverterModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+  <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+  <!--   that the header and footer are always on display by making the body scroll -->
+
+  <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+
+    <div class="modal-content shadow">
+
+      <div class="modal-header bg-success bg-gradient text-white">
+        <h5 class="modal-title">Currency calculator</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form>
+
+          <div class="form-floating mb-3">
+
+            <input id="fromAmount" type="number" class="form-control" value="1" min="1" step="1">
+            <label >From USD</label>
+
+          </div>
+
+          <div class="form-floating mb-3">
+
+            <select id="exchangeRate" class="form-select">
+              
+            </select>
+            
+            <label for="exchangeRate">Convert to</label>
+
+          </div>
+
+          <div class="form-floating">
+
+            <input id="toAmount" type="text" class="form-control" disabled>
+            <label for="toAmount">Result</label>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm myBtn" data-bs-dismiss="modal">CLOSE</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!--<div id="currencyConverterModal" class="modal" data-bs-backdrop="false" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content shadow">
       <div class="modal-header bg-success bg-gradient text-white">
@@ -250,7 +336,7 @@
       </div>
     </div>
   </div>
-</div>
+</div>-->
 
 <div id="weatherModal" class="modal" data-bs-backdrop="false" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -371,54 +457,34 @@
   </div>
 </div>
 
-<div id="flags" class="modal" data-bs-backdrop="false" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content shadow">
-      <div class="modal-header bg-success bg-gradient text-white">
-        <h5 class="modal-title" id="modalTitle">Flags</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"><img src=""/></button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-striped">
-          <tr>
-
-            <td class="text-center">
-              <b>Flag</b>
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td id="countryFlag" class="text-center">
-              value
-            </td>
-
-          </tr> 
-
-            <tr>
-
-              <td class="text-center">
-                <b>Coat of Arms</b>
-              </td>
+<div id="newsModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
   
-            </tr>
+  <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+  <!--   that the header and footer are always on display by making the body scroll -->
+  
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+       
+    <div class="modal-content shadow"> 
+      
+      <div class="modal-header bg-danger bg-gradient text-white">
+        <h5 class="modal-title">BREAKING NEWS</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-          <tr>
-
-            <td id="coatOfArms" class="text-center">
-              value
-            </td>
-
-          </tr>       
+      <div class="modal-body" id="news">
+        
           
-        </table>
+        
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Close</button>
       </div>
+ 
     </div>
+    
   </div>
+  
 </div>
 
   <script src="libraries-and-plugins/jquery-3.7.0.min.js" type="application/javascript"></script> 
@@ -431,6 +497,8 @@
   <script src="libraries-and-plugins/leaflet-easybutton/src/easy-button.js"></script>
 
   <script src="libraries-and-plugins/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+  <script src="libraries-and-plugins/leaflet-extra-markers/src/assets/js/leaflet.extra-markers.js"></script>
   
   <script src="js/scripts.js"></script> 
 

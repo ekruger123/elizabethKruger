@@ -24,24 +24,24 @@ var streets = L.tileLayer(
   
 var layerControl = L.control.layers(basemaps).addTo(map);
   
-L.easyButton("fa-info", function (btn, map) {
+L.easyButton("fa-info fa-lg", function (btn, map) {
     $("#overviewModal").modal("show");
   }).addTo(map);
 
-L.easyButton("fa-brands fa-wikipedia-w", function (btn, map) {
+L.easyButton("fa-brands fa-wikipedia-w fa-lg", function (btn, map) {
     $("#wikiModal").modal("show");
   }).addTo(map);
 
-L.easyButton("fa-arrow-right-arrow-left", function (btn, map) {
+L.easyButton("fa-arrow-right-arrow-left fa-lg", function (btn, map) {
     $("#currencyConverterModal").modal("show");
   }).addTo(map);
 
-L.easyButton("fa-cloud", function (btn, map) {
+L.easyButton("fa-cloud fa-lg", function (btn, map) {
     $("#weatherModal").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-flag", function (btn, map) {
-    $("#flags").modal("show");
+  L.easyButton("fa-newspaper fa-lg", function (btn, map) {
+    $("#newsModal").modal("show");
   }).addTo(map);
 
 
@@ -75,7 +75,7 @@ L.easyButton("fa-cloud", function (btn, map) {
                 for (const iterator of result.data) {
                     $('#selectCountry').append(`<option id="${iterator.iso_a2}" value="${iterator.iso_a2}">${iterator.name}</option>`)
 
-                }
+                }              
 
                 
 
@@ -174,6 +174,67 @@ $('#selectCountry').change(function() {
       }
   });
 
+  $.ajax({
+    url: "php/getNews.php",
+    type: 'GET',
+    data:{iso:$('select').val()},
+    dataType: 'json',
+
+    success: function(result) {
+        console.log(JSON.stringify(result));
+
+
+        if (result.status.name == "ok") {
+
+          console.log("Ellie", result.data)
+
+          for (let i = 0; i < result.data.results.length; i++) {
+
+          console.log("Ellie", result.data.results[i].image_url)
+          console.log("Ellie", result.data.results[i].link)
+          console.log("Ellie", result.data.results[i].title)
+
+          $('#news').append(`<table class="table table-borderless mb-0">
+          <tr>
+
+          <td rowspan="2" width="50%">
+            <img class="img-fluid rounded" src=${result.data.results[i].image_url} alt="article image">
+          </td>
+          
+          <td>
+            <a href=${result.data.results[i].link} class="fw-bold fs-6 text-black" target="_blank">${result.data.results[i].title}</a>
+          </td>
+          
+        </tr>
+
+        <tr>
+                       
+            <td class="align-bottom pb-0">
+              
+              <p class="fw-light fs-6 mb-1">${result.data.results[i].source_id}</p>
+              
+            </td>            
+            
+          </tr>         
+        </table>
+        <hr>`);
+          }
+
+          
+
+             
+
+              
+              }     
+              
+            },
+
+    error: function(jqXHR, textStatus, errorThrown) {
+        // your error code
+        console.log(jqXHR);
+    }
+});
+
   //getting restcountries data for flag model plus info
 
   $.ajax({
@@ -188,9 +249,7 @@ $('#selectCountry').change(function() {
         console.log(JSON.stringify(result));
   
         if (result.status.name == "ok") {
-          $('#countryFlag').html(`<img src=${result.data[0].flags.png} alt=${result.data[0].flags.alt} width="200"></img>`);
-
-          $('#coatOfArms').html(`<img src=${result.data[0].coatOfArms.png} alt="Coat of arms" width="200"></img>`);   
+          $('#flag').html(`<img src=${result.data[0].flags.png} alt=${result.data[0].flags.alt} height="25" class="border border-secondary"></img>`);  
           
           $('#drivesOn').text(result.data[0].car.side);
 
@@ -232,7 +291,7 @@ $('#selectCountry').change(function() {
 
 
 
-           //$('#currency').prepend(`<span>${result.data.results[0].annotations.currency.symbol}</span>`);
+           
 
 
           
@@ -275,7 +334,7 @@ $('#selectCountry').change(function() {
 
             let currency = (result.data[0].currencyCode);
 
-           $.ajax({
+          $.ajax({
               url: "php/getExchangeRate.php",
               type: 'GET',
               dataType: 'json',
@@ -289,94 +348,99 @@ $('#selectCountry').change(function() {
         
                     let ratesArr = Object.entries(rates);
         
-                    for ([key, value] of ratesArr){
-
-                      if (key === "USD") {
-                        $('#selectFrom').append(`<option class="${key}" value="${value}" selected="selected">${key}</option>`)
-                      } else {
-                        $('#selectFrom').append(`<option class="${key}" value="${value}">${key}</option>`)
-                      }
-        
+                    for ([key, value] of ratesArr){        
 
                       if (key === currency) {
-                        $('#selectTo').append(`<option class="${key}" value="${value}" selected="selected">${key}</option>`)
+                        $('#exchangeRate').append(`<option class="${key}" value="${value}" selected="selected"></option>`)
                       } else {
-                        $('#selectTo').append(`<option class="${key}" value="${value}">${key}</option>`)
+                        $('#exchangeRate').append(`<option class="${key}" value="${value}"></option>`)
                       }
                      }
+
+                     $.ajax({
+                      url: "php/getCurrencyName.php",
+                      type: 'GET',
+                      dataType: 'json',
+                
+                      success: function(result) {
+                          console.log(JSON.stringify(result));
+                      
+                
+                          if (result.status.name == "ok") {
+
+                                  
+                
+                            let currencyNames = result.data;
+                
+                            let currencyNamesArr = Object.entries(currencyNames);
+                
+                            for ([key, value] of currencyNamesArr){        
+        
+
+                            console.log("Ellie", key)
+                            console.log("Ellie", value)
+                            console.log($('#exchangeRate').find('option'))
+                              if (key === $('#exchangeRate').find('option')) {
+                                $('#').text(value)
+                              } 
+                              }
+                             }       
+                           
+                          },
+        
+                          
+                              error: function(jqXHR, textStatus, errorThrown) {
+                                // your error code
+                                console.log(jqXHR);
+                              }
+                            });
+
                    }
+
+                   
                   },
+
+                  
                       error: function(jqXHR, textStatus, errorThrown) {
                         // your error code
                         console.log(jqXHR);
                     }
-                }); 
+                });
+                  
+                      
 
-       /* $('#selectFrom').change(function() {
-          if($('#amount').val()){
-            $('#amount').val('');
-          }
-          if($('#convertedAmount').text()){
-            $('#convertedAmount').text('');
-          }
-        })
+                $('#fromAmount').on('keyup', function () {
 
-        $('#selectTo').change(function() {
-          if($('#amount').val()){
-            $('#amount').val('');
-          }
-          if($('#convertedAmount').text()){
-            $('#convertedAmount').text('');
-          }          
-        })*/
+                  calcResult();
+                
+                })
+                
+                $('#fromAmount').on('change', function () {
+                
+                  calcResult();
+                
+                })
+                
+                $('#exchangeRate').on('change', function () {
+                
+                  calcResult();
+                
+                })
+                
+                $('#exampleModal').on('show.bs.modal', function () {
+                
+                  calcResult();
+                
+                })
+                
+                
+                function calcResult() {
+                   
+                  $('#toAmount').val($('#fromAmount').val() * $('#exchangeRate').val()).format("0,0.00");
+                  
+                }
+                
 
-        $('#selectCountry').change(function() {
-          if($('#amount').val()){
-            $('#amount').val('');
-          }
-          if($('#convertedAmount').text()){
-            $('#convertedAmount').text('');
-          }          
-        })
-                 
-        $('#amount').keyup(function(){
-        
-          let amount = $('#amount').val();
-          let from = $('#selectFrom').val();
-          let to = $('#selectTo').val();
-        
-          let convertedAmount = (amount/from)*to;
-        
-          let nf = new Intl.NumberFormat('en-US');
-                    
-          $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
-        }) 
-        
-        $('#selectFrom').change(function(){
-        
-          let amount = $('#amount').val();
-          let from = $('#selectFrom').val();
-          let to = $('#selectTo').val();
-        
-          let convertedAmount = (amount/from)*to;
-        
-          let nf = new Intl.NumberFormat('en-US');
-                    
-          $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
-        })
-        
-        $('#selectTo').change(function(){
-        
-          let amount = $('#amount').val();
-          let from = $('#selectFrom').val();
-          let to = $('#selectTo').val();
-        
-          let convertedAmount = (amount/from)*to;
-        
-          let nf = new Intl.NumberFormat('en-US');
-                    
-          $('#convertedAmount').text(`${nf.format(amount)} ${$('#selectFrom option:selected').text()} = ${nf.format(convertedAmount)} ${$('#selectTo option:selected').text()}`);
-        })
 
             $.ajax({
               url: "php/getWeather.php",
@@ -393,19 +457,19 @@ $('#selectCountry').change(function() {
                      $('#weatherModalTitle').text($('#capitalCity').text());                    
                      $('#todayConditions').text(result.data.forecast.forecastday[0].day.condition.text)
                      $('#todayIcon').html(`<img src=${result.data.forecast.forecastday[0].day.condition.icon} alt="today's weather">`)
-                     $('#todayMaxTemp').text(result.data.forecast.forecastday[0].day.maxtemp_c);
-                    $('#todayMinTemp').text(result.data.forecast.forecastday[0].day.mintemp_c);
+                     $('#todayMaxTemp').text(result.data.forecast.forecastday[0].day.maxtemp_c.fixedTo(0));
+                    $('#todayMinTemp').text(result.data.forecast.forecastday[0].day.mintemp_c.fixedTo(0));
 
                     $('#day1Date').text(new Date(result.data.forecast.forecastday[1].date).toLocaleDateString('en-us', { weekday:"short", month:"short", day:"numeric"}) );
                     $('#day1Icon').html(`<img src=${result.data.forecast.forecastday[1].day.condition.icon} alt="tomorrow's weather">`);
-                    $('#day1MaxTemp').text(result.data.forecast.forecastday[1].day.maxtemp_c);
-                    $('#day1MinTemp').text(result.data.forecast.forecastday[1].day.mintemp_c);
+                    $('#day1MaxTemp').text(result.data.forecast.forecastday[1].day.maxtemp_c.fixedTo(0));
+                    $('#day1MinTemp').text(result.data.forecast.forecastday[1].day.mintemp_c.fixedTo(0));
                     
 
                     $('#day2Date').text(new Date(result.data.forecast.forecastday[2].date).toLocaleDateString('en-us', { weekday:"short", month:"short", day:"numeric"}));
                     $('#day2Icon').html(`<img src=${result.data.forecast.forecastday[2].day.condition.icon} alt="weather in two days">`);
-                    $('#day2MaxTemp').text(result.data.forecast.forecastday[2].day.maxtemp_c);
-                    $('#day2MinTemp').text(result.data.forecast.forecastday[2].day.mintemp_c);
+                    $('#day2MaxTemp').text(result.data.forecast.forecastday[2].day.maxtemp_c.fixedTo(0));
+                    $('#day2MinTemp').text(result.data.forecast.forecastday[2].day.mintemp_c.fixedTo(0));
 
                   }
                 },
@@ -415,12 +479,138 @@ $('#selectCountry').change(function() {
                   console.log(jqXHR);
               }
             });
+
+            var airports = L.markerClusterGroup({
+              polygonOptions: {
+                fillColor: '#fff',
+                color: '#000',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.5
+              }}).addTo(map);
+        
+        var cities = L.markerClusterGroup({
+              polygonOptions: {
+                fillColor: '#fff',
+                color: '#000',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.5
+              }}).addTo(map);
+        
+        var overlays = {
+          "Airports": airports,
+          "Cities": cities
+        };
+        
+        var layerControl = L.control.layers(overlays).addTo(map);
+        
+        var airportIcon = L.ExtraMarkers.icon({
+          prefix: 'fa',
+          icon: 'fa-plane',
+          iconColor: 'black',
+          markerColor: 'white',
+          shape: 'square'
+        });
+        
+        var cityIcon = L.ExtraMarkers.icon({
+          prefix: 'fa',
+          icon: 'fa-city',
+          markerColor: 'green',
+          shape: 'square'
+        });
+          
+          showToast("Getting airports and city markers", 1500, false);
+                           
+          $.ajax({
+            url: "php/getAirports.php",
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              iso:$('select').val() 
+            },
+            success: function (result) {
+                    
+              if (result.status.code == 200) {
+                console.log("ellie", result.data)
+                
+                result.data.forEach(function(item) {
+                  
+                  L.marker([item.lat, item.lng], {icon: airportIcon})
+                    .bindTooltip(item.name, {direction: 'top', sticky: true})
+                    .addTo(airports);
+                  
+                })
+               
+              } else {
+        
+                showToast("Error retrieving airport data", 4000, false);
+        
+              } 
+        
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              showToast("Airports - server error", 4000, false);
+            }
+          }); 
+                           
+          $.ajax({
+            url: "php/getCities.php",
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              iso:$('select').val() 
+            },
+            success: function (result) {
+                    
+              if (result.status.code == 200) {
+        
+                console.log("Ellie", result.data)
+                result.data.forEach(function(item) {
+                  
+                  /*L.marker([item.lat, item.lng], {icon: cityIcon})
+                    .bindTooltip("<div class='col text-center'><strong>" + item.name + "</strong><br><i>(" + numeral(item.population).format("0,0") + ")</i></div>", {direction: 'top', sticky: true})
+                    .addTo(cities);*/
+                  
+                })
+                
+              } else {
+        
+                showToast("Error retrieving city data", 4000, false);
+        
+              }
+        
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              showToast("Cities - server error", 4000, false);
+            }
+          });   
+                          
+        };
+        
+        // functions
+        
+        function showToast(message, duration, close) {
+          
+          Toastify({
+            text: message,
+            duration: duration,
+            newWindow: true,
+            close: close,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "#004687"
+            },
+            onClick: function () {} // Callback after click
+          }).showToast();
   
 
             //getting earthquakes
             //nesting it in geonames, as using north, south, east and west data.
 
-            $.ajax({
+            /*$.ajax({
               url: "php/getEarthquakes.php",
               type: 'GET',
               data:{
@@ -467,7 +657,7 @@ $('#selectCountry').change(function() {
                   // your error code
                   console.log(jqXHR);
               }
-          });
+          });*/
 
           //getting wiki data using, north, south, east west
 
