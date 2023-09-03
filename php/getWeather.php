@@ -7,7 +7,7 @@
 
     $executionStartTime = microtime(true);
 
-    $url = 'https://api.weatherapi.com/v1/forecast.json?key=82fd07c6d96a410383d95753231608q=' . $_REQUEST['city'] . '&days=3';
+    $url = 'https://api.weatherapi.com/v1/forecast.json?key=870e4e0aaae64ea8b20193046230309q=' . $_REQUEST['city'] . '&days=3';
 
     $ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

@@ -1,28 +1,59 @@
-var streets = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-    {
-      attribution:
-        "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
-    }
-  );
-  
-  var satellite = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    {
-      attribution:
-        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-    }
-  );
-  var basemaps = {
-    "Streets": streets,
-    "Satellite": satellite
-  };
-  
-  var map = L.map("map", {
+var streets = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+});
+
+var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+});
+
+var basemaps = {
+  "Streets": streets,
+  "Satellite": satellite
+};
+
+var map = L.map('map', {
     layers: [streets]
-  }).setView([54.5, -4], 6);
-  
-var layerControl = L.control.layers(basemaps).addTo(map);
+}).setView([54.5, -4], 6);
+
+var airports = L.markerClusterGroup({
+      polygonOptions: {
+        fillColor: '#fff',
+        color: '#000',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.5
+      }}).addTo(map);
+
+var cities = L.markerClusterGroup({
+      polygonOptions: {
+        fillColor: '#fff',
+        color: '#000',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.5
+      }}).addTo(map);
+
+var overlays = {
+  "Airports": airports,
+  "Cities": cities
+};
+
+var layerControl = L.control.layers(basemaps, overlays).addTo(map);
+
+var airportIcon = L.ExtraMarkers.icon({
+  prefix: 'fa',
+  icon: 'fa-plane',
+  iconColor: 'black',
+  markerColor: 'white',
+  shape: 'square'
+});
+
+var cityIcon = L.ExtraMarkers.icon({
+  prefix: 'fa',
+  icon: 'fa-city',
+  markerColor: 'green',
+  shape: 'square'
+});
   
 L.easyButton("fa-info fa-lg", function (btn, map) {
     $("#overviewModal").modal("show");
@@ -44,6 +75,24 @@ L.easyButton("fa-cloud fa-lg", function (btn, map) {
     $("#newsModal").modal("show");
   }).addTo(map);
 
+  // functions
+        
+  function showToast(message, duration, close) {
+          
+   Toastify({
+      text: message,
+      duration: duration,
+      newWindow: true,
+      close: close,
+      gravity: "top", // `top` or `bottom`
+      position: "center", // `left`, `center` or `right`
+      stopOnFocus: true, // Prevents dismissing of toast on hover
+      style: {
+        background: "#004687"
+      },
+      onClick: function () {} // Callback after click
+    }).showToast();
+  }
 
   //onload button
 
@@ -186,13 +235,7 @@ $('#selectCountry').change(function() {
 
         if (result.status.name == "ok") {
 
-          console.log("Ellie", result.data)
-
           for (let i = 0; i < result.data.results.length; i++) {
-
-          console.log("Ellie", result.data.results[i].image_url)
-          console.log("Ellie", result.data.results[i].link)
-          console.log("Ellie", result.data.results[i].title)
 
           $('#news').append(`<table class="table table-borderless mb-0">
           <tr>
@@ -344,20 +387,27 @@ $('#selectCountry').change(function() {
         
                   if (result.status.name == "ok") {
         
-                    let rates = result.data.rates;
+                    let rates = result.data.conversion_rates;
         
                     let ratesArr = Object.entries(rates);
-        
-                    for ([key, value] of ratesArr){        
 
-                      if (key === currency) {
-                        $('#exchangeRate').append(`<option class="${key}" value="${value}" selected="selected"></option>`)
-                      } else {
-                        $('#exchangeRate').append(`<option class="${key}" value="${value}"></option>`)
-                      }
-                     }
+                    var output = [];
 
-                     $.ajax({
+                    console.log("Ellie", output)
+
+                    $.each(rates, function(key, value) {
+                    
+                    if (key === currency) {
+                      output.push(`<option id="${key}" value="${value}" selected="selected">${key}</option>`);
+                    } else {
+                      output.push(`<option id="${key}" value="${value}">${key}</option>`);
+                    }
+                    });
+
+                    $('#exchangeRate').html(output.join(''));
+                            
+
+                    $.ajax({
                       url: "php/getCurrencyName.php",
                       type: 'GET',
                       dataType: 'json',
@@ -373,17 +423,24 @@ $('#selectCountry').change(function() {
                             let currencyNames = result.data;
                 
                             let currencyNamesArr = Object.entries(currencyNames);
-                
-                            for ([key, value] of currencyNamesArr){        
-        
 
-                            console.log("Ellie", key)
-                            console.log("Ellie", value)
-                            console.log($('#exchangeRate').find('option'))
-                              if (key === $('#exchangeRate').find('option')) {
-                                $('#').text(value)
-                              } 
-                              }
+                            $('#exchangeRate').find('option').each(function(index,element){
+                                                                               
+                            for ([code, cName] of currencyNamesArr){
+                            if (element.id === "FOK") {
+                              $(`#${element.id}`).text("Faroese Króna");
+                            } 
+                            if (element.id === "KID") {
+                              $(`#${element.id}`).text("Kiribati Dollar");
+                            } 
+                            if (element.id === "TVD") {
+                              $(`#${element.id}`).text("Tuvaluan dollar");
+                            } 
+                            if (code == element.id) 
+                              $(`#${element.id}`).text(cName);
+                          } 
+                              }); 
+                            
                              }       
                            
                           },
@@ -435,8 +492,8 @@ $('#selectCountry').change(function() {
                 
                 
                 function calcResult() {
-                   
-                  $('#toAmount').val($('#fromAmount').val() * $('#exchangeRate').val()).format("0,0.00");
+   
+                  $('#toAmount').val(numeral($('#fromAmount').val() * $('#exchangeRate').val()).format("0,0.00"));
                   
                 }
                 
@@ -480,45 +537,6 @@ $('#selectCountry').change(function() {
               }
             });
 
-            var airports = L.markerClusterGroup({
-              polygonOptions: {
-                fillColor: '#fff',
-                color: '#000',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.5
-              }}).addTo(map);
-        
-        var cities = L.markerClusterGroup({
-              polygonOptions: {
-                fillColor: '#fff',
-                color: '#000',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.5
-              }}).addTo(map);
-        
-        var overlays = {
-          "Airports": airports,
-          "Cities": cities
-        };
-        
-        var layerControl = L.control.layers(overlays).addTo(map);
-        
-        var airportIcon = L.ExtraMarkers.icon({
-          prefix: 'fa',
-          icon: 'fa-plane',
-          iconColor: 'black',
-          markerColor: 'white',
-          shape: 'square'
-        });
-        
-        var cityIcon = L.ExtraMarkers.icon({
-          prefix: 'fa',
-          icon: 'fa-city',
-          markerColor: 'green',
-          shape: 'square'
-        });
           
           showToast("Getting airports and city markers", 1500, false);
                            
@@ -568,9 +586,9 @@ $('#selectCountry').change(function() {
                 console.log("Ellie", result.data)
                 result.data.forEach(function(item) {
                   
-                  /*L.marker([item.lat, item.lng], {icon: cityIcon})
+                  L.marker([item.lat, item.lng], {icon: cityIcon})
                     .bindTooltip("<div class='col text-center'><strong>" + item.name + "</strong><br><i>(" + numeral(item.population).format("0,0") + ")</i></div>", {direction: 'top', sticky: true})
-                    .addTo(cities);*/
+                    .addTo(cities);
                   
                 })
                 
@@ -586,25 +604,8 @@ $('#selectCountry').change(function() {
             }
           });   
                           
-        };
         
-        // functions
         
-        function showToast(message, duration, close) {
-          
-          Toastify({
-            text: message,
-            duration: duration,
-            newWindow: true,
-            close: close,
-            gravity: "top", // `top` or `bottom`
-            position: "center", // `left`, `center` or `right`
-            stopOnFocus: true, // Prevents dismissing of toast on hover
-            style: {
-              background: "#004687"
-            },
-            onClick: function () {} // Callback after click
-          }).showToast();
   
 
             //getting earthquakes

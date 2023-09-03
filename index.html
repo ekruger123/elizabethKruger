@@ -32,10 +32,11 @@
     <link rel="stylesheet" href="libraries-and-plugins/leaflet-extra-markers/src/assets/css/leaflet.extra-markers.css">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     
+    <link rel="stylesheet" type="text/css" href="libraries-and-plugins/toastify-js/src/toastify.css">
 </head>
 <body>
 
@@ -203,7 +204,7 @@
 <div id="wikiModal" class="modal" data-bs-backdrop="false" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content shadow">
-      <div class="modal-header bg-success bg-gradient text-white">
+      <div class="modal-header bg-primary bg-gradient text-white">
         <h5 class="modal-title" id="modalTitle">Wikipedia</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"><img src=""/></button>
       </div>
@@ -252,7 +253,7 @@
 
     <div class="modal-content shadow">
 
-      <div class="modal-header bg-success bg-gradient text-white">
+      <div class="modal-header bg-secondary bg-gradient text-white">
         <h5 class="modal-title">Currency calculator</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -299,49 +300,10 @@
 
 </div>
 
-<!--<div id="currencyConverterModal" class="modal" data-bs-backdrop="false" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content shadow">
-      <div class="modal-header bg-success bg-gradient text-white">
-        <h5 class="modal-title" id="modalTitle">Currency Converter</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"><img src=""/></button>
-      </div>
-      <div class="modal-body">
-      
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-default" >Amount</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="amount">
-          </div>
-
-          <div>
-            <span>From</span>
-            <select class="form-select" aria-label="Default select example" id="selectFrom">
-
-            </select>
-          </div>
-
-          <div>
-            <span>To</span>
-            <select class="form-select" aria-label="Default select example" id="selectTo">
-
-            </select>
-          </div>
-
-          <div class="w-100 p-3 mt-4 border rounded" id="convertedAmount"></div>
-
-            
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>-->
-
 <div id="weatherModal" class="modal" data-bs-backdrop="false" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content shadow">
-      <div class="modal-header bg-success bg-gradient text-white">
+      <div class="modal-header bg-info bg-gradient text-white">
         <h5 class="modal-title" id="weatherModalTitle">Weather</h5>
         <button type="button" class="btn-close btn-closegit -white" data-bs-dismiss="modal" aria-label="Close"><img src=""/></button>
       </div>
@@ -494,11 +456,16 @@
 
   <script src="libraries-and-plugins/leaflet/dist/leaflet.js"></script>
 
+
   <script src="libraries-and-plugins/leaflet-easybutton/src/easy-button.js"></script>
 
   <script src="libraries-and-plugins/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
-  <script src="libraries-and-plugins/leaflet-extra-markers/src/assets/js/leaflet.extra-markers.js"></script>
+  <script src="libraries-and-plugins/leaflet-extra-markers/dist/js/leaflet.extra-markers.min.js"></script>
+
+  <script type="text/javascript" src="libraries-and-plugins/toastify-js/src/toastify.js"></script>
+
+  <script src="libraries-and-plugins/numeral/min/numeral.min.js"></script>
   
   <script src="js/scripts.js"></script> 
 
