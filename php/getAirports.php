@@ -19,14 +19,6 @@
 	curl_close($ch);
 
     $decode = json_decode($result,true);
-
-	$airports = [];
-
-	for ($i = 0; $i < count($decode['geonames']); $i++) {
-        if($decode['geonames'][$i]['countryCode'] == $_REQUEST['iso']) {
-            array_push($airports, $decode['geonames'][$i]);
-        }
-    }
      
     $output['status']['code'] = "200";
 	$output['status']['name'] = "ok";

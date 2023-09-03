@@ -393,8 +393,6 @@ $('#selectCountry').change(function() {
 
                     var output = [];
 
-                    console.log("Ellie", output)
-
                     $.each(rates, function(key, value) {
                     
                     if (key === currency) {
@@ -550,7 +548,7 @@ $('#selectCountry').change(function() {
             success: function (result) {
                     
               if (result.status.code == 200) {
-                console.log("ellie", result.data)
+
                 
                 result.data.forEach(function(item) {
                   
@@ -583,7 +581,6 @@ $('#selectCountry').change(function() {
                     
               if (result.status.code == 200) {
         
-                console.log("Ellie", result.data)
                 result.data.forEach(function(item) {
                   
                   L.marker([item.lat, item.lng], {icon: cityIcon})
