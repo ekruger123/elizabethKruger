@@ -235,32 +235,38 @@ $('#selectCountry').change(function() {
 
         if (result.status.name == "ok") {
 
+          let newsOutput = [];
+
           for (let i = 0; i < result.data.results.length; i++) {
 
-          $('#news').append(`<table class="table table-borderless mb-0">
-          <tr>
-
-          <td rowspan="2" width="50%">
-            <img class="img-fluid rounded" src=${result.data.results[i].image_url} alt="article image">
-          </td>
-          
-          <td>
-            <a href=${result.data.results[i].link} class="fw-bold fs-6 text-black" target="_blank">${result.data.results[i].title}</a>
-          </td>
-          
-        </tr>
-
-        <tr>
-                       
-            <td class="align-bottom pb-0">
-              
-              <p class="fw-light fs-6 mb-1">${result.data.results[i].source_id}</p>
-              
-            </td>            
+            newsOutput.push(`<table class="table table-borderless mb-0">
+            <tr>
+  
+            <td rowspan="2" width="50%">
+              <img class="img-fluid rounded" src=${result.data.results[i].image_url} alt="article image">
+            </td>
             
-          </tr>         
-        </table>
-        <hr>`);
+            <td>
+              <a href=${result.data.results[i].link} class="fw-bold fs-6 text-black" target="_blank">${result.data.results[i].title}</a>
+            </td>
+            
+          </tr>
+  
+          <tr>
+                         
+              <td class="align-bottom pb-0">
+                
+                <p class="fw-light fs-6 mb-1">${result.data.results[i].source_id}</p>
+                
+              </td>            
+              
+            </tr>         
+          </table>
+          <hr>`);        
+
+          $('#news').html(output.join(''));
+
+          
           }
 
           
@@ -394,12 +400,15 @@ $('#selectCountry').change(function() {
                     var output = [];
 
                     $.each(rates, function(key, value) {
-                    
+            
                     if (key === currency) {
                       output.push(`<option id="${key}" value="${value}" selected="selected">${key}</option>`);
-                    } else {
+                    } else if (key === "SLE") {
+                      output.push(null);
+                    } 
+                    else {
                       output.push(`<option id="${key}" value="${value}">${key}</option>`);
-                    }
+                    } 
                     });
 
                     $('#exchangeRate').html(output.join(''));
