@@ -230,15 +230,19 @@ $('#selectCountry').change(function() {
     dataType: 'json',
 
     success: function(result) {
-        console.log(JSON.stringify(result));
-
+        console.log("Ellie", JSON.stringify(result));
 
         if (result.status.name == "ok") {
 
           let newsOutput = [];
 
+
           for (let i = 0; i < result.data.results.length; i++) {
 
+            /*if (result.data.results.length === 0) {
+              $("#news").empty();
+              newsOutput.push('<h1>No news found.</h1>')
+            } else {*/ 
             newsOutput.push(`<table class="table table-borderless mb-0">
             <tr>
   
@@ -262,9 +266,13 @@ $('#selectCountry').change(function() {
               
             </tr>         
           </table>
-          <hr>`);        
+          <hr>`); 
+          
+            //}         
+          
 
-          $('#news').html(output.join(''));
+          $('#news').html(newsOutput.join(''));
+    
 
           
           }
