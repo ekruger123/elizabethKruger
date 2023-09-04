@@ -206,8 +206,14 @@ $('#selectCountry').change(function() {
           }
 
           if (result.status.name == "ok") {
-
-                border = L.geoJSON(result.data).addTo(map);
+            var myStyle = {
+              fillColor: '#fff',
+              color: '#000',
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.5
+          };
+                border = L.geoJSON(result.data,{style: myStyle}).addTo(map);
                 
                 // zoom the map to the polygon
                 map.fitBounds(border.getBounds());
@@ -230,7 +236,7 @@ $('#selectCountry').change(function() {
     dataType: 'json',
 
     success: function(result) {
-        console.log("Ellie", JSON.stringify(result));
+        console.log(JSON.stringify(result));
 
         if (result.status.name == "ok") {
 
@@ -529,19 +535,19 @@ $('#selectCountry').change(function() {
                      $('#weatherModalTitle').text($('#capitalCity').text());                    
                      $('#todayConditions').text(result.data.forecast.forecastday[0].day.condition.text)
                      $('#todayIcon').html(`<img src=${result.data.forecast.forecastday[0].day.condition.icon} alt="today's weather">`)
-                     $('#todayMaxTemp').text(result.data.forecast.forecastday[0].day.maxtemp_c.fixedTo(0));
-                    $('#todayMinTemp').text(result.data.forecast.forecastday[0].day.mintemp_c.fixedTo(0));
+                     $('#todayMaxTemp').text(result.data.forecast.forecastday[0].day.maxtemp_c.toFixed(0));
+                    $('#todayMinTemp').text(result.data.forecast.forecastday[0].day.mintemp_c.toFixed(0));
 
                     $('#day1Date').text(new Date(result.data.forecast.forecastday[1].date).toLocaleDateString('en-us', { weekday:"short", month:"short", day:"numeric"}) );
                     $('#day1Icon').html(`<img src=${result.data.forecast.forecastday[1].day.condition.icon} alt="tomorrow's weather">`);
-                    $('#day1MaxTemp').text(result.data.forecast.forecastday[1].day.maxtemp_c.fixedTo(0));
-                    $('#day1MinTemp').text(result.data.forecast.forecastday[1].day.mintemp_c.fixedTo(0));
+                    $('#day1MaxTemp').text(result.data.forecast.forecastday[1].day.maxtemp_c.toFixed(0));
+                    $('#day1MinTemp').text(result.data.forecast.forecastday[1].day.mintemp_c.toFixed(0));
                     
 
                     $('#day2Date').text(new Date(result.data.forecast.forecastday[2].date).toLocaleDateString('en-us', { weekday:"short", month:"short", day:"numeric"}));
                     $('#day2Icon').html(`<img src=${result.data.forecast.forecastday[2].day.condition.icon} alt="weather in two days">`);
-                    $('#day2MaxTemp').text(result.data.forecast.forecastday[2].day.maxtemp_c.fixedTo(0));
-                    $('#day2MinTemp').text(result.data.forecast.forecastday[2].day.mintemp_c.fixedTo(0));
+                    $('#day2MaxTemp').text(result.data.forecast.forecastday[2].day.maxtemp_c.toFixed(0));
+                    $('#day2MinTemp').text(result.data.forecast.forecastday[2].day.mintemp_c.toFixed(0));
 
                   }
                 },
